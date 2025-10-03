@@ -20,7 +20,7 @@ Il modello di memoria virtuale in Linux prevede la suddivisione dello spazio di 
 - **Stack:** cresce verso indirizzi più bassi, memorizza dati temporanei.
 - **Argomenti da riga di comando:** allocati all’estremo superiore dello spazio virtuale.
 
-![Struttura della memoria virtuale](https://github.com/Micheles2102/c-journey/edit/main/manual-malloc/Memory_Layout.jpg)
+![Struttura della memoria virtuale](https://github.com/Micheles2102/c-journey/blob/main/manual-malloc/Memory_Layout.jpg)
 
 ## Il breaking point e la gestione dell’heap con sbrk() e brk()
 **Definizione del breaking point:** Il breaking point (brk, o "programma break") rappresenta il confine superiore della regione dati allocata dinamicamente dal processo: tipicamente, la fine del segmento heap5. L’heap viene creato subito dopo i segmenti dati e BSS (vedi layout sopra); la posizione del breaking point viene gestita dal kernel e può essere modificata via le system call brk() e sbrk().
