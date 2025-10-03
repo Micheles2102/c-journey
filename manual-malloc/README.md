@@ -215,8 +215,12 @@ Il passaggio dall’allocazione heap mediante `sbrk()`/`brk()` alla gestione ava
 L’utilizzo consapevole di `mmap` — sfruttando protezioni, flag e modalità copy-on-write — permette sia la realizzazione di sistemi efficienti e sicuri sia una portabilità di massimo livello nei contesti POSIX e beyond.
 
 ---
+## 📚 Key References
 
-## 📚 Riferimenti
+1. [Memory Allocators 101 - Write a simple memory allocator](https://arjunsreedharan.org/post/148675821737/memory-allocators-101-write-a-simple-memory)
+
+2. [c - Advantages of mmap () over sbrk ()? - Stack Overflow](https://stackoverflow.com)  
+## 📚 References
 
 1. [MemoryLayoutofLinuxProcess/3_Memory_layout.md at main - GitHub](https://github.com)  
 2. [Presentazione standard di PowerPoint - units.it](https://moodle2.units.it)  
@@ -227,17 +231,16 @@ L’utilizzo consapevole di `mmap` — sfruttando protezioni, flag e modalità c
 7. [Mastering the Brk System Call in C – TheLinuxCode](https://thelinuxcode.com)  
 8. [Understanding Heap Memory Allocation in C - sbrk and brk](https://dev.to)  
 9. [Process memory layout - Unix & Linux Stack Exchange](https://unix.stackexchange.com)  
-10. [c - Advantages of mmap () over sbrk ()? - Stack Overflow](https://stackoverflow.com)  
-11. [mmap (2) - Linux manual page - man7.org](https://www.man7.org)  
-12. [An In-Depth Guide to Using mmap () for Memory Mapping in C on Linux](https://thelinuxcode.com)  
-13. [mmap File-backed mapping vs Anonymous mapping in Linux](https://stackoverflow.com)  
-14. [c - Using mmap over a file - Stack Overflow](https://stackoverflow.com)  
-15. [what scenarios we set file descriptor as -1 in mmap?](https://stackoverflow.com)  
-16. [The mmap() copy-on-write trick: reducing memory usage of array copies](https://pythonspeed.com)  
-17. [Copy-on-write - Wikipedia](https://it.wikipedia.org)  
-18. [Abort in glibc while trying to use sbrk to reduce the size of the data ...](https://stackoverflow.com)  
-19. [How does copy-on-write work with read-only virtual pages in ... - linux](https://unix.stackexchange.com)  
-20. [Sottoroutine di protezione - IBM](https://www.ibm.com)  
-21. [What is the difference between MAP_SHARED and MAP_PRIVATE in the mmap ...](https://stackoverflow.com)
+10. [mmap (2) - Linux manual page - man7.org](https://www.man7.org)  
+11. [An In-Depth Guide to Using mmap () for Memory Mapping in C on Linux](https://thelinuxcode.com)  
+12. [mmap File-backed mapping vs Anonymous mapping in Linux](https://stackoverflow.com)  
+13. [c - Using mmap over a file - Stack Overflow](https://stackoverflow.com)  
+14. [what scenarios we set file descriptor as -1 in mmap?](https://stackoverflow.com)  
+15. [The mmap() copy-on-write trick: reducing memory usage of array copies](https://pythonspeed.com)  
+16. [Copy-on-write - Wikipedia](https://it.wikipedia.org)  
+17. [Abort in glibc while trying to use sbrk to reduce the size of the data ...](https://stackoverflow.com)  
+18. [How does copy-on-write work with read-only virtual pages in ... - linux](https://unix.stackexchange.com)  
+19. [Sottoroutine di protezione - IBM](https://www.ibm.com)  
+20. [What is the difference between MAP_SHARED and MAP_PRIVATE in the mmap ...](https://stackoverflow.com)
 
 
