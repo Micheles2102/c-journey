@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool inizio=1;
 
 
 typedef struct{
@@ -16,7 +15,7 @@ typedef struct{
     bool is_free;
 }header_t;
 
-
+//memory pool per avere una mini cache di blocchi più grandi allocati per quella dimensione
 typedef struct 
 {
     header_t* bin_8;
@@ -28,8 +27,7 @@ typedef struct
 
 memory_pool memory;
 
-
-//questo nel caso in cui ci siano dei blocchi questa chiama allocate_memory
+//questa funziona crea/gestisce la memory pool
 void* allocator(size_t size);
 // questo per allocare memoria nel caso in cui non ci siano blocchi
 void* allocate_memory(size_t size);
