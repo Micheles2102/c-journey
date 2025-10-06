@@ -32,7 +32,7 @@ void* allocator(size_t size){
             }
         }
 
-         //fino a quando vede che non ci sono blochci disponibili
+        //fino a quando vede che non ci sono blocchi disponibili
         header_t* tmp=memory.bin_8;
         while(tmp->is_free==0){
             //controlla se il successivo è il breaking point(dunque NULL)
