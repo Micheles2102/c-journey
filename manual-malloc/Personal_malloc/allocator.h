@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 
 
@@ -22,10 +23,13 @@ typedef struct
     header_t* bin_16;
     header_t* bin_24;
     header_t* bin_32;
-    header_t* bin_64;
 }memory_pool;
 
-memory_pool memory;
+extern int INIZIO;
+extern int blocchi_8;
+extern int blocchi_16;
+extern int blocchi_32;
+extern memory_pool* memory;
 
 //questa funziona crea/gestisce la memory pool
 void* allocator(size_t size);
@@ -34,6 +38,10 @@ void* allocate_memory(size_t size);
 //funzione per allocare le struct dei bin
 void* allocate_memory_for_bin(size_t size);
 
+void* allocate_memory_for_pool(size_t size);
+
+//funzione per allocare la pool
+int allocate_memory_pool();
 // questa non cambierà
 int deallocate_memory(void* ptr,size_t size);
 
