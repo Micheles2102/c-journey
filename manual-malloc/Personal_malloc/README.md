@@ -1,0 +1,1 @@
+![Descrizione alternativa](allocation.drawio.png)
