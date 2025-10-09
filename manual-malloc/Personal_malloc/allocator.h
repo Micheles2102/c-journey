@@ -1,49 +1,71 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
-
 #include <sys/mman.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
+// Structure representing metadata for each memory block.
+// Used to track allocation status and link blocks together in a bin.
+typedef struct header {
+    void* ptr_iniziale;     // Starting address of the block
+    void* ptr_finale;       // Ending address of the block (inclusive)
+    struct header* ptr_next;// Pointer to the next block in the bin (linked list)
+    bool is_free;           // Flag indicating whether the block is available
+} header_t;
 
+// Structure representing a memory pool.
+// Each bin holds a linked list of blocks of a specific size.
+// Acts as a mini-cache to optimize repeated allocations of small blocks.
+typedef struct {
+    header_t* bin_8;   // Bin for 8-byte blocks
+    header_t* bin_16;  // Bin for 16-byte blocks
+    header_t* bin_24;  // Bin for 24-byte blocks (currently unused)
+    header_t* bin_32;  // Bin for 32-byte blocks
+} memory_pool;
 
-typedef struct{
-    void* ptr_iniziale; // puntatore iniziale di quel blocco 
-    void* ptr_finale; //puntatoore finale di quel blocco ptr_iniziale+7; 7 perchè ptr_iniziale è incluso
-    header_t* ptr_next; // mi serve per creare una lista tra i vari header
-    bool is_free;
-}header_t;
+// Global variables shared across allocator modules
+extern int INIZIO;             // Flag to check if the pool has been initialized
+extern memory_pool* memory;    // Pointer to the memory pool structure
 
-//memory pool per avere una mini cache di blocchi più grandi allocati per quella dimensione
-typedef struct 
-{
-    header_t* bin_8;
-    header_t* bin_16;
-    header_t* bin_24;
-    header_t* bin_32;
-}memory_pool;
+// Structure used for dynamic dispatch of allocation functions.
+// Each entry maps a block size to its corresponding allocator function.
+// Enables flexible selection of allocation strategy at runtime.
+typedef struct {
+    const size_t size_block;   // Size of each block in the bin
+    void* (*allocator_memory)(size_t size, const int number_block, const int blocchi_allocare);
+    // Function pointer to the allocator for this bin
+} comand_for_bin;
 
-extern int INIZIO;
-extern int blocchi_8;
-extern int blocchi_16;
-extern int blocchi_32;
-extern memory_pool* memory;
+// Allocator function for bins.
+// Allocates a series of blocks of the given size and links them together.
+// Parameters:
+// - size: size of each block
+// - number_block: index of the bin (used to select bin_8, bin_16, etc.)
+// - blocchi_allocare: number of blocks to allocate
+void* allocate_bin(size_t size, const int number_block, const int blocchi_allocare);
 
-//questa funziona crea/gestisce la memory pool
+// Main allocator interface.
+// Called by the user to request memory of a given size.
+// Internally dispatches to the correct bin or fallback allocator.
 void* allocator(size_t size);
-// questo per allocare memoria nel caso in cui non ci siano blocchi
+
+// Fallback allocator for arbitrary sizes.
+// Uses mmap to allocate memory directly when no bin is suitable.
 void* allocate_memory(size_t size);
-//funzione per allocare le struct dei bin
+
+// Allocates memory for the bin metadata (array of header_t).
+// Used during bin initialization.
 void* allocate_memory_for_bin(size_t size);
 
-void* allocate_memory_for_pool(size_t size);
-
-//funzione per allocare la pool
+// Initializes the memory pool structure.
+// Allocates space for the bins and sets up initial state.
 int allocate_memory_pool();
-// questa non cambierà
-int deallocate_memory(void* ptr,size_t size);
 
+// Deallocator function.
+// Frees a previously allocated block.
+// Note: Implementation may vary depending on bin or direct allocation.
+int deallocate_memory(void* ptr, size_t size);
 
-#endif ALLOCATOR_H
+#endif
