@@ -40,7 +40,7 @@ Though still in its early stages, this shell is designed to be expanded over tim
 
 ### **Contributing**
 
-Suggestions, improvements, or new features are welcome! Feel free to open issues or create pull requests to help improve the project.
+ Suggestions, improvements, or new features are welcome! Feel free to open issues or create pull requests to help improve the project.
 
 ### **Additional Notes**
 
