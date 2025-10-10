@@ -12,6 +12,7 @@ typedef struct header {
     void* ptr_iniziale;     // Starting address of the block
     void* ptr_finale;       // Ending address of the block (inclusive)
     struct header* ptr_next;// Pointer to the next block in the bin (linked list)
+    void* breakingpoint;
     bool is_free;           // Flag indicating whether the block is available
 } header_t;
 
@@ -21,7 +22,6 @@ typedef struct header {
 typedef struct {
     header_t* bin_8;   // Bin for 8-byte blocks
     header_t* bin_16;  // Bin for 16-byte blocks
-    header_t* bin_24;  // Bin for 24-byte blocks (currently unused)
     header_t* bin_32;  // Bin for 32-byte blocks
 } memory_pool;
 
@@ -38,7 +38,18 @@ typedef struct {
     // Function pointer to the allocator for this bin
 } comand_for_bin;
 
-// Allocator function for bins.
+
+typedef struct {
+    const size_t size_block;   // Size of each block in the bin
+    int (*deallocate_block)(void* ptr,size_t size,const int blocchi_allocare);
+    
+} comand_for_deallo;
+
+
+int deallocate_block(void* ptr,size_t size,const int blocchi_allocare);
+
+
+// Allocator fun   
 // Allocates a series of blocks of the given size and links them together.
 // Parameters:
 // - size: size of each block
@@ -66,6 +77,7 @@ int allocate_memory_pool();
 // Deallocator function.
 // Frees a previously allocated block.
 // Note: Implementation may vary depending on bin or direct allocation.
-int deallocate_memory(void* ptr, size_t size);
-
+int deallocator(void* ptr, size_t size);
+int deallocate_everything();
+int deallocate_bin(header_t* bin,size_t size);
 #endif
