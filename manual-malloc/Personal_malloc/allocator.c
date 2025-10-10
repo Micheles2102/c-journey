@@ -4,11 +4,6 @@
 // This structure holds bins for different block sizes.
 memory_pool* memory;
 
-// Number of blocks to allocate per bin.
-// These values define the initial capacity of each bin.
-int blocchi_8 = 4;
-int blocchi_16 = 3;
-int blocchi_32 = 2;
 
 // Initialization flag.
 // Used to determine whether the memory pool has already been created.
@@ -44,7 +39,6 @@ void* allocate_memory(size_t size) {
 // - number_block: index of the bin (0 for bin_8, 1 for bin_16, 2 for bin_32)
 // - blocchi_allocare: number of blocks to allocate in the bin
 void* allocate_bin(size_t size, const int number_block, const int blocchi_allocare) {
-    void* breakingpoint = NULL;
     header_t* bin_attuale = NULL;
 
     // Ensure the memory pool has been initialized
@@ -61,7 +55,7 @@ void* allocate_bin(size_t size, const int number_block, const int blocchi_alloca
     // If the bin is not yet allocated, initialize it
     if (!bin_attuale) {
         // Allocate space for the array of headers
-        bin_attuale = allocate_memory(blocchi_allocare * sizeof(header_t));
+        bin_attuale = allocate_memory(4 * sizeof(header_t));
         if (!bin_attuale) {
             perror("Memory allocation bin error");
             exit(-2);
@@ -78,9 +72,8 @@ void* allocate_bin(size_t size, const int number_block, const int blocchi_alloca
             perror("Memory allocation blocks error");
             exit(-3);
         }
-
         // Calculate the breaking point (last byte of the last block)
-        breakingpoint = (void*)((char*)bin_attuale->ptr_iniziale + (blocchi_allocare * size - 1));
+        bin_attuale->breakingpoint = (void*)((char*)bin_attuale->ptr_iniziale + (blocchi_allocare * size - 1));
 
         // Initialize each block in the bin
         for (int i = 0; i < blocchi_allocare; i++) {
@@ -88,7 +81,7 @@ void* allocate_bin(size_t size, const int number_block, const int blocchi_alloca
             bin_attuale[i].ptr_finale = (void*)((char*)bin_attuale[i].ptr_iniziale + (size - 1));
 
             // If this is the last block, terminate the linked list
-            if ((char*)bin_attuale[i].ptr_finale == (char*)breakingpoint) {
+            if ((char*)bin_attuale[i].ptr_finale == (char*)bin_attuale->breakingpoint) {
                 bin_attuale[i].ptr_next = NULL;
                 break;
             }
@@ -108,8 +101,16 @@ void* allocate_bin(size_t size, const int number_block, const int blocchi_alloca
         }
         tmp = tmp->ptr_next;
     }
-
+    //problem with mmap if he decided to not use that addr(kernel may not choose tmp->ptr_iniziale)
+    void* new_mapping=mmap(tmp->ptr_iniziale, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (new_mapping == MAP_FAILED) {
+        perror("Memory allocation error");
+        return NULL;
+    }
+    tmp->ptr_iniziale = new_mapping;
+    tmp->ptr_finale = (void*)((char*)new_mapping + size - 1);
     // Mark the block as used and return its starting address
     tmp->is_free = false;
     return tmp->ptr_iniziale;
 }
+
