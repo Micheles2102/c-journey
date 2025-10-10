@@ -17,6 +17,13 @@ comand_for_bin alloc_pool[] = {
     {.size_block = 0} // Sentinel to mark end of array
 };
 
+comand_for_deallo dealloc_pool[] = {
+    {.size_block = sizeof(char) * 8,  .deallocate_block = deallocate_block},
+    {.size_block = sizeof(char) * 16, .deallocate_block = deallocate_block},
+    {.size_block = sizeof(char) * 32, .deallocate_block = deallocate_block},
+    {.size_block = 0} // Sentinel to mark end of array
+};
+
 // Main allocator function called by the user.
 // It initializes the memory pool if needed, selects the appropriate bin based on size,
 // and dispatches the allocation to the correct function via function pointer.
@@ -49,4 +56,18 @@ void* allocator(size_t size) {
     } while (!check); // Repeat until a valid allocation is returned
 
     return check; // Return pointer to allocated memory
+}
+
+
+int deallocator(void* ptr,size_t size){
+    int check=0;
+    int i=0;
+    do {
+        check = (size <= dealloc_pool[i].size_block)
+            ? dealloc_pool[i].deallocate_block(ptr,dealloc_pool[i].size_block,i)
+            : 0;
+        i++;
+    } while (!check); // Repeat until a valid allocation is returned
+
+    return check;
 }
